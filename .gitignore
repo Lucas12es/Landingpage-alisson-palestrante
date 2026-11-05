@@ -13,3 +13,7 @@ lighthouse-*.json
 /*.jpg
 /*.jpeg
 /*.png
+
+# Originais do cliente (videos/fotos brutos) - nao publicar
+/WhatsApp*/
+*.mov

@@ -569,3 +569,24 @@ a.channel:hover { border-color: var(--gold-400); background: rgba(221, 179, 96, 
 .sobre__photo .slider__slide img { transform: scale(1); transition: none; }
 .sobre__photo .slider__slide.is-active img { animation: gzoom 6s ease-out forwards; }
 @media (prefers-reduced-motion: reduce) { .sobre__photo .slider__slide.is-active img { animation: none; } }
+
+/* ---------- Home: vídeo no formato original (horizontal 16:9) ---------- */
+.vid.slider { aspect-ratio: 16 / 9; height: auto; max-height: none; }
+.vid__el { object-position: 50% 50%; }
+.vid .slider__shade { background: linear-gradient(180deg, rgba(5, 10, 20, 0) 70%, rgba(5, 10, 20, .6) 100%); }
+.vid .slider__ui { bottom: .8rem; left: 1rem; right: 1rem; }
+@media (min-width: 960px) {
+  .hero__copy, .hero__copy { grid-column: 1 / 7; }
+  .hero__media { grid-column: 7 / 13; }
+  .hero .h1 { font-size: clamp(3rem, 5.4vw, 5.2rem); }
+  .hero__media .frame__ring { border-radius: 28px 110px 28px 28px; }
+  .hero__media .frame::after { border-radius: 28px 110px 28px 28px; }
+  .vid.slider { aspect-ratio: 16 / 9; border-radius: 26px 108px 26px 26px; }
+  .hero__badge { left: -1.6rem; top: auto; bottom: 1.4rem; }
+}
+@media (min-width: 1200px) { .hero__copy { grid-column: 1 / 7; } }
+@media (max-width: 959.98px) {
+  .hero__media { margin-top: calc(var(--header-h) + .5rem); margin-inline: 0; width: 100%; }
+  .vid.slider { aspect-ratio: 16 / 9; height: auto; }
+  .hero__copy { margin-top: var(--s-6); }
+}
