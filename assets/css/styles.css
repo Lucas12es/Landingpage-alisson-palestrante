@@ -549,7 +549,7 @@ a.channel:hover { border-color: var(--gold-400); background: rgba(221, 179, 96, 
 .gslide.is-active .gslide__img { animation: gzoom 6s ease-out forwards; }
 @keyframes gzoom { from { transform: scale(1); } to { transform: scale(1.06); } }
 .gslide__cap { position: absolute; left: 0; right: 0; bottom: 0; padding: 3rem var(--s-5) var(--s-5); font-family: var(--font-display); font-size: clamp(1.15rem, 2.4vw, 1.6rem); color: #fff; background: linear-gradient(to top, rgba(5, 10, 24, .82), transparent); }
-.gslider__dots { display: flex; justify-content: center; gap: .5rem; margin-top: var(--s-4); }
-.gdot { width: 28px; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, .22); transition: background .4s, width .4s; }
-.gdot.is-active { width: 44px; background: var(--gold-500); }
+.gslider__dots { display: flex; flex-wrap: wrap; justify-content: center; gap: .4rem; margin-top: var(--s-4); }
+.gdot { width: 18px; height: 3px; border-radius: 2px; background: rgba(255, 255, 255, .22); transition: background .4s, width .4s; }
+.gdot.is-active { width: 32px; background: var(--gold-500); }
 @media (prefers-reduced-motion: reduce) { .gslide { transition: none; } .gslide.is-active .gslide__img { animation: none; } }
