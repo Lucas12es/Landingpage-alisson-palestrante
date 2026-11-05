@@ -1,0 +1,10 @@
+/* Carregado apenas quando o JavaScript está desativado (via <noscript>) */
+.nav { display: block !important; position: static !important; }
+.nav-toggle { display: none !important; }
+.header { position: static; background: var(--navy-950); height: auto; padding-block: .75rem; }
+.header__inner { flex-wrap: wrap; }
+.nav__list { flex-wrap: wrap; }
+.hero__media { margin-top: 0 !important; }
+.slider__ui { display: none; }
+.slider__slide:not(.is-active) { display: none; }
+.fab { display: none; }

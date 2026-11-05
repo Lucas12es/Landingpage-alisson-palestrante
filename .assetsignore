@@ -1,0 +1,14 @@
+.git
+.gitignore
+.assetsignore
+wrangler.jsonc
+node_modules
+deploy.bat
+README.md
+docs
+scripts
+.env.example
+/*.pdf
+/*.jpg
+/*.jpeg
+/*.png

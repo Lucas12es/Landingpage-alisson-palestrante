@@ -1,0 +1,15 @@
+.DS_Store
+Thumbs.db
+node_modules/
+.env
+.env.*
+!.env.example
+*.log
+.wrangler/
+.vscode/
+lighthouse-*.json
+# Materiais originais do cliente (PDFs e fotos em alta, na raiz da pasta) — não vão para o GitHub
+/*.pdf
+/*.jpg
+/*.jpeg
+/*.png
