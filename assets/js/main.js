@@ -147,86 +147,25 @@
     counters.forEach(function (el) { co.observe(el); });
   }
 
-  /* ---------- Galeria: faixa rolável + lightbox ---------- */
-  var strip = $("[data-strip]");
-  if (strip) {
-    var items = $$("li", strip);
-    var gPrev = $("[data-gprev]"), gNext = $("[data-gnext]"), gCount = $("[data-gcount]");
-    var stepSize = function () { var li = items[0]; return li ? li.getBoundingClientRect().width + 16 : 320; };
-    var firstVisible = function () {
-      var left = strip.scrollLeft, best = 0, bestD = Infinity;
-      items.forEach(function (li, i) { var d = Math.abs(li.offsetLeft - strip.offsetLeft - left); if (d < bestD) { bestD = d; best = i; } });
-      return best;
+  /* ---------- Galeria: apresentação automática (foto grande, troca com fade) ---------- */
+  var gs = $("[data-gslider]");
+  if (gs) {
+    var gSlides = $$(".gslide", gs), gDots = $$(".gdot", gs), gIdx = 0, gVisible = true;
+    var gShow = function (n) {
+      gIdx = (n + gSlides.length) % gSlides.length;
+      gSlides.forEach(function (sl, i) {
+        var on = i === gIdx;
+        sl.classList.toggle("is-active", on);
+        sl.setAttribute("aria-hidden", on ? "false" : "true");
+        if (on) { var im = $(".gslide__img", sl); if (im) { im.style.animation = "none"; void im.offsetWidth; im.style.animation = ""; } }
+      });
+      gDots.forEach(function (d, i) { d.classList.toggle("is-active", i === gIdx); });
     };
-    var sync = function () {
-      var max = strip.scrollWidth - strip.clientWidth - 2;
-      if (gPrev) gPrev.disabled = strip.scrollLeft <= 2;
-      if (gNext) gNext.disabled = strip.scrollLeft >= max;
-      if (gCount) gCount.textContent = (firstVisible() + 1) + " / " + items.length;
-    };
-    var go = function (dir) { strip.scrollBy({ left: dir * stepSize() * (window.innerWidth > 900 ? 1.6 : 1), behavior: reduceMotion ? "auto" : "smooth" }); };
-    gPrev && gPrev.addEventListener("click", function () { go(-1); });
-    gNext && gNext.addEventListener("click", function () { go(1); });
-    strip.addEventListener("scroll", function () { window.requestAnimationFrame(sync); }, { passive: true });
-    window.addEventListener("resize", sync);
-    strip.addEventListener("keydown", function (e) {
-      if (e.target !== strip) return;
-      if (e.key === "ArrowRight") { e.preventDefault(); go(1); }
-      if (e.key === "ArrowLeft") { e.preventDefault(); go(-1); }
-    });
-    sync();
-
-    /* Rolagem automática: uma foto por vez, em ciclo. Só pausa com a foto ampliada, aba oculta, fora da tela ou durante o toque/arraste. */
-    var GAL_MS = 2500;
-    {
-      var gVisible = true, gHold = false, gResume = null;
-      var gStep = function () {
-        if (gHold || !gVisible || document.hidden) return;
-        var lb = $("#lightbox");
-        if (lb && lb.open) return;
-        var base = items[0].offsetLeft;
-        var max = strip.scrollWidth - strip.clientWidth - 2;
-        if (strip.scrollLeft >= max) { strip.scrollTo({ left: 0, behavior: reduceMotion ? "auto" : "smooth" }); return; }
-        var next = Math.min(firstVisible() + 1, items.length - 1);
-        strip.scrollTo({ left: Math.min(items[next].offsetLeft - base, strip.scrollWidth), behavior: reduceMotion ? "auto" : "smooth" });
-      };
-      var gHoldFor = function (ms) { gHold = true; window.clearTimeout(gResume); gResume = window.setTimeout(function () { gHold = false; }, ms); };
-      strip.addEventListener("touchstart", function () { gHoldFor(5000); }, { passive: true });
-      strip.addEventListener("pointerdown", function (e) { if (e.pointerType !== "mouse") gHoldFor(5000); }, { passive: true });
-      if ("IntersectionObserver" in window) {
-        new IntersectionObserver(function (e) { gVisible = e[0].isIntersecting; }, { threshold: 0.1 }).observe(strip);
-      }
-      window.setInterval(gStep, GAL_MS);
+    gShow(0);
+    if ("IntersectionObserver" in window) {
+      new IntersectionObserver(function (e) { gVisible = e[0].isIntersecting; }, { threshold: 0.2 }).observe(gs);
     }
-
-    var box = $("#lightbox");
-    if (box && typeof box.showModal === "function") {
-      var shots = $$(".shot", strip), cur = 0, opener = null;
-      var bImg = $(".lightbox__img", box), bCap = $("[data-lcap]", box), bNum = $("[data-lnum]", box);
-      var render = function (n) {
-        cur = (n + shots.length) % shots.length;
-        var s = shots[cur];
-        bImg.src = s.getAttribute("data-full");
-        bImg.alt = s.getAttribute("data-alt") || "";
-        bCap.textContent = s.getAttribute("data-cap") || "";
-        bNum.textContent = (cur + 1) + " de " + shots.length;
-      };
-      shots.forEach(function (s, i) {
-        s.addEventListener("click", function () { opener = s; render(i); box.showModal(); });
-      });
-      $("[data-lprev]", box).addEventListener("click", function () { render(cur - 1); });
-      $("[data-lnext]", box).addEventListener("click", function () { render(cur + 1); });
-      $("[data-lclose]", box).addEventListener("click", function () { box.close(); });
-      box.addEventListener("click", function (e) { if (e.target === box) box.close(); });
-      box.addEventListener("keydown", function (e) {
-        if (e.key === "ArrowRight") render(cur + 1);
-        if (e.key === "ArrowLeft") render(cur - 1);
-      });
-      box.addEventListener("close", function () {
-        bImg.removeAttribute("src");
-        if (opener) { opener.focus(); try { opener.scrollIntoView({ block: "nearest", inline: "center" }); } catch (e) {} }
-      });
-    }
+    window.setInterval(function () { if (gVisible && !document.hidden) gShow(gIdx + 1); }, 3500);
   }
 
   /* ---------- WhatsApp flutuante: some quando o contato está visível ---------- */
