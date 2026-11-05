@@ -1,6 +1,6 @@
 {
   "$schema": "node_modules/wrangler/config-schema.json",
-  "name": "landingpage-alisson-palestrante",
+  "name": "billowing-cell-c8f7",
   "compatibility_date": "2025-10-01",
   "assets": {
     "directory": "./",
