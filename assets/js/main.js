@@ -178,7 +178,7 @@
 
     /* Rolagem automática: uma foto por vez, em ciclo. Só pausa com a foto ampliada, aba oculta, fora da tela ou durante o toque/arraste. */
     var GAL_MS = 2500;
-    if (!reduceMotion) {
+    {
       var gVisible = true, gHold = false, gResume = null;
       var gStep = function () {
         if (gHold || !gVisible || document.hidden) return;
@@ -186,9 +186,9 @@
         if (lb && lb.open) return;
         var base = items[0].offsetLeft;
         var max = strip.scrollWidth - strip.clientWidth - 2;
-        if (strip.scrollLeft >= max) { strip.scrollTo({ left: 0, behavior: "smooth" }); return; }
+        if (strip.scrollLeft >= max) { strip.scrollTo({ left: 0, behavior: reduceMotion ? "auto" : "smooth" }); return; }
         var next = Math.min(firstVisible() + 1, items.length - 1);
-        strip.scrollTo({ left: Math.min(items[next].offsetLeft - base, strip.scrollWidth), behavior: "smooth" });
+        strip.scrollTo({ left: Math.min(items[next].offsetLeft - base, strip.scrollWidth), behavior: reduceMotion ? "auto" : "smooth" });
       };
       var gHoldFor = function (ms) { gHold = true; window.clearTimeout(gResume); gResume = window.setTimeout(function () { gHold = false; }, ms); };
       strip.addEventListener("touchstart", function () { gHoldFor(5000); }, { passive: true });
