@@ -33,8 +33,8 @@ Não há instalação. Abra a pasta com qualquer servidor estático, por exemplo
 Não há variáveis de ambiente nem segredos (veja `.env.example`).
 
 ## Domínio e SEO
-O domínio no canonical, Open Graph, JSON-LD, robots e sitemap é **provisório**
-(`https://alisson-palestrante.ltabordaferrei.workers.dev`). Ao definir o domínio final:
+O site não usa URL absoluta (sem canonical, og:url nem sitemap).
+Ao ter um domínio próprio, peça para adicionar canonical, sitemap e og:url (o script abaixo só funciona depois disso):
 `node scripts/set-domain.mjs https://www.seudominio.com.br`
 Depois cadastre o site no Google Search Console e envie o `sitemap.xml`.
 

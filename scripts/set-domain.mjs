@@ -10,7 +10,7 @@ if (!/^https:\/\/[^\s/]+\.[^\s/]+$/.test(target)) {
 }
 // Detecta o domínio atual a partir do canonical do index.html (permite trocar mais de uma vez).
 const m = /<link rel="canonical" href="(https:\/\/[^\/"]+)/.exec(readFileSync("index.html", "utf8"));
-const CURRENT = m ? m[1] : "https://alisson-palestrante.ltabordaferrei.workers.dev";
+const CURRENT = m ? m[1] : "https://landingpage-alisson-palestrante.ltabordaferrei.workers.dev";
 const exts = new Set([".html", ".xml", ".txt"]);
 let changed = 0;
 (function walk(dir) {
