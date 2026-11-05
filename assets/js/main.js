@@ -53,7 +53,7 @@
     var slides = $$(".slider__slide", slider);
     var dots = $$(".slider__dot", slider);
     var btnPrev = $("[data-prev]", slider), btnNext = $("[data-next]", slider), btnToggle = $("[data-toggle]", slider);
-    var SLIDE_MS = 6500, idx = 0, timer = null, userPaused = reduceMotion, hoverPaused = false;
+    var SLIDE_MS = 6500, idx = 0, timer = null, userPaused = false, hoverPaused = false;
     slider.style.setProperty("--slide-ms", SLIDE_MS + "ms");
 
     var show = function (n) {
@@ -97,10 +97,6 @@
         schedule();
       });
     }
-    slider.addEventListener("mouseenter", function () { hoverPaused = true; schedule(); });
-    slider.addEventListener("mouseleave", function () { hoverPaused = false; schedule(); });
-    slider.addEventListener("focusin", function () { hoverPaused = true; schedule(); });
-    slider.addEventListener("focusout", function () { hoverPaused = false; schedule(); });
     document.addEventListener("visibilitychange", schedule);
     // gesto de arrastar (touch)
     var x0 = null;
