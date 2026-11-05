@@ -53,7 +53,7 @@
     var slides = $$(".slider__slide", slider);
     var dots = $$(".slider__dot", slider);
     var btnPrev = $("[data-prev]", slider), btnNext = $("[data-next]", slider), btnToggle = $("[data-toggle]", slider);
-    var SLIDE_MS = 6500, idx = 0, timer = null, userPaused = false, hoverPaused = false;
+    var SLIDE_MS = 4000, idx = 0, timer = null, userPaused = false, hoverPaused = false;
     slider.style.setProperty("--slide-ms", SLIDE_MS + "ms");
 
     var show = function (n) {
@@ -176,34 +176,27 @@
     });
     sync();
 
-    /* Rolagem automática (respeita reduced-motion; pausa em hover, foco, toque, lightbox aberto, aba oculta ou fora da tela) */
-    var GAL_MS = 3500;
+    /* Rolagem automática: uma foto por vez, em ciclo. Só pausa com a foto ampliada, aba oculta, fora da tela ou durante o toque/arraste. */
+    var GAL_MS = 2500;
     if (!reduceMotion) {
-      var gTimer = null, gVisible = false, gHold = false, gResume = null;
+      var gVisible = true, gHold = false, gResume = null;
       var gStep = function () {
         if (gHold || !gVisible || document.hidden) return;
         var lb = $("#lightbox");
         if (lb && lb.open) return;
+        var base = items[0].offsetLeft;
         var max = strip.scrollWidth - strip.clientWidth - 2;
-        if (strip.scrollLeft >= max) strip.scrollTo({ left: 0, behavior: "smooth" });
-        else go(1);
+        if (strip.scrollLeft >= max) { strip.scrollTo({ left: 0, behavior: "smooth" }); return; }
+        var next = Math.min(firstVisible() + 1, items.length - 1);
+        strip.scrollTo({ left: Math.min(items[next].offsetLeft - base, strip.scrollWidth), behavior: "smooth" });
       };
-      var gStart = function () { if (!gTimer) gTimer = window.setInterval(gStep, GAL_MS); };
-      var gHoldFor = function (ms) {
-        gHold = true;
-        window.clearTimeout(gResume);
-        if (ms) gResume = window.setTimeout(function () { gHold = false; }, ms);
-      };
-      strip.addEventListener("mouseenter", function () { gHoldFor(0); });
-      strip.addEventListener("mouseleave", function () { gHoldFor(1200); });
-      strip.addEventListener("focusin", function () { gHoldFor(0); });
-      strip.addEventListener("focusout", function () { gHoldFor(1200); });
-      strip.addEventListener("touchstart", function () { gHoldFor(7000); }, { passive: true });
-      [gPrev, gNext].forEach(function (b) { b && b.addEventListener("click", function () { gHoldFor(7000); }); });
+      var gHoldFor = function (ms) { gHold = true; window.clearTimeout(gResume); gResume = window.setTimeout(function () { gHold = false; }, ms); };
+      strip.addEventListener("touchstart", function () { gHoldFor(5000); }, { passive: true });
+      strip.addEventListener("pointerdown", function (e) { if (e.pointerType !== "mouse") gHoldFor(5000); }, { passive: true });
       if ("IntersectionObserver" in window) {
-        new IntersectionObserver(function (e) { gVisible = e[0].isIntersecting; }, { threshold: 0.3 }).observe(strip);
-      } else { gVisible = true; }
-      gStart();
+        new IntersectionObserver(function (e) { gVisible = e[0].isIntersecting; }, { threshold: 0.1 }).observe(strip);
+      }
+      window.setInterval(gStep, GAL_MS);
     }
 
     var box = $("#lightbox");
