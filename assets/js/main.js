@@ -53,7 +53,7 @@
     var slides = $$(".slider__slide", slider);
     var dots = $$(".slider__dot", slider);
     var btnPrev = $("[data-prev]", slider), btnNext = $("[data-next]", slider), btnToggle = $("[data-toggle]", slider);
-    var SLIDE_MS = 4000, idx = 0, timer = null, userPaused = false, hoverPaused = false;
+    var SLIDE_MS = 3500, idx = 0, timer = null, userPaused = false, hoverPaused = false;
     slider.style.setProperty("--slide-ms", SLIDE_MS + "ms");
 
     var show = function (n) {
@@ -107,6 +107,30 @@
       if (Math.abs(dx) > 48) show(idx + (dx < 0 ? 1 : -1));
     }, { passive: true });
     schedule();
+  }
+
+  /* ---------- Vídeo de apresentação (Home) ---------- */
+  var vid = $("[data-video]");
+  if (vid) {
+    var vPlay = $("[data-vplay]"), vMute = $("[data-vmute]"), vUser = false;
+    var vLabel = function () {
+      if (vPlay) { vPlay.setAttribute("aria-pressed", String(vid.paused)); vPlay.setAttribute("aria-label", vid.paused ? "Reproduzir vídeo" : "Pausar vídeo"); var ip = vPlay.querySelector(".i-pause"); }
+    };
+    vid.addEventListener("play", vLabel); vid.addEventListener("pause", vLabel);
+    vPlay && vPlay.addEventListener("click", function () { vUser = true; if (vid.paused) vid.play(); else vid.pause(); });
+    vMute && vMute.addEventListener("click", function () {
+      vid.muted = !vid.muted;
+      vMute.setAttribute("aria-pressed", String(vid.muted));
+      vMute.setAttribute("aria-label", vid.muted ? "Ativar o som do vídeo" : "Desativar o som do vídeo");
+      if (!vid.muted && vid.paused) vid.play();
+    });
+    if (!reduceMotion) {
+      var tryPlay = function () { var p = vid.play(); if (p && p.catch) p.catch(function () {}); };
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (e) { if (e[0].isIntersecting) { if (!vUser) tryPlay(); } else vid.pause(); }, { threshold: 0.25 }).observe(vid);
+      } else { tryPlay(); }
+    }
+    vLabel();
   }
 
   /* ---------- Revelar ao rolar ---------- */
