@@ -176,6 +176,36 @@
     });
     sync();
 
+    /* Rolagem automática (respeita reduced-motion; pausa em hover, foco, toque, lightbox aberto, aba oculta ou fora da tela) */
+    var GAL_MS = 3500;
+    if (!reduceMotion) {
+      var gTimer = null, gVisible = false, gHold = false, gResume = null;
+      var gStep = function () {
+        if (gHold || !gVisible || document.hidden) return;
+        var lb = $("#lightbox");
+        if (lb && lb.open) return;
+        var max = strip.scrollWidth - strip.clientWidth - 2;
+        if (strip.scrollLeft >= max) strip.scrollTo({ left: 0, behavior: "smooth" });
+        else go(1);
+      };
+      var gStart = function () { if (!gTimer) gTimer = window.setInterval(gStep, GAL_MS); };
+      var gHoldFor = function (ms) {
+        gHold = true;
+        window.clearTimeout(gResume);
+        if (ms) gResume = window.setTimeout(function () { gHold = false; }, ms);
+      };
+      strip.addEventListener("mouseenter", function () { gHoldFor(0); });
+      strip.addEventListener("mouseleave", function () { gHoldFor(1200); });
+      strip.addEventListener("focusin", function () { gHoldFor(0); });
+      strip.addEventListener("focusout", function () { gHoldFor(1200); });
+      strip.addEventListener("touchstart", function () { gHoldFor(7000); }, { passive: true });
+      [gPrev, gNext].forEach(function (b) { b && b.addEventListener("click", function () { gHoldFor(7000); }); });
+      if ("IntersectionObserver" in window) {
+        new IntersectionObserver(function (e) { gVisible = e[0].isIntersecting; }, { threshold: 0.3 }).observe(strip);
+      } else { gVisible = true; }
+      gStart();
+    }
+
     var box = $("#lightbox");
     if (box && typeof box.showModal === "function") {
       var shots = $$(".shot", strip), cur = 0, opener = null;
