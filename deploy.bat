@@ -7,7 +7,7 @@ REM  Rode este arquivo (duplo clique) para enviar as alteracoes ao GitHub.
 REM  O Cloudflare publica automaticamente apos o envio.
 REM  Preencha REPO_URL uma unica vez, com o endereco do repositorio no GitHub.
 REM ===========================================================================
-set "REPO_URL=https://github.com/Lucas12es/Landingpage--alisson-palestrante.git"
+set "REPO_URL=https://github.com/Lucas12es/Landingpage-alisson-palestrante.git"
 set "BRANCH=main"
 
 cd /d "%~dp0"
