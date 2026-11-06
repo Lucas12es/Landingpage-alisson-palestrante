@@ -590,3 +590,8 @@ a.channel:hover { border-color: var(--gold-400); background: rgba(221, 179, 96, 
   .vid.slider { aspect-ratio: 16 / 9; height: auto; }
   .hero__copy { margin-top: var(--s-6); }
 }
+
+/* Sobre: impede que a grade ultrapasse a largura da tela no celular */
+.sobre__grid { grid-template-columns: minmax(0, 1fr); }
+.sobre__photo, .sobre__text { min-width: 0; }
+@media (min-width: 960px) { .sobre__grid { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); } }
